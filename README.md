@@ -1,6 +1,6 @@
-# 📝 Text Analytics Projects: Climate Sentiment & Social Media NER
+# 🧠 Text Analytics Research Projects (2025)
 
-This repository presents two independent text analytics research projects focused on **climate-related financial disclosures** and **social media entity recognition**. The work explores both classical and modern natural language processing (NLP) techniques, combining traditional models with pretrained language models.
+This repository presents three independent text analytics research projects focused on **climate-related financial disclosures** and **social media entity recognition**. Each project investigates real-world NLP challenges using a combination of classical algorithms and deep learning models.
 
 ---
 
@@ -8,82 +8,100 @@ This repository presents two independent text analytics research projects focuse
 
 | Project | Title | Domain |
 |--------|-------|--------|
-| **1** | Climate Sentiment Classification & Topic Modeling | ESG, NLP, Transfer Learning |
-| **2** | Named Entity Recognition on Twitter Data | Social Media, Sequence Tagging |
+| **1** | Climate Sentiment Classification | ESG, Sentiment Analysis, Transfer Learning |
+| **2** | Topic Modeling of Climate Disclosures | Unsupervised Learning, NLP |
+| **3** | Named Entity Recognition on Twitter | Social Media, Sequence Tagging |
 
 ---
 
-## 🌍 Project 1 — Climate Sentiment Classification & Topic Discovery
+## 🌱 Project 1 — Climate Sentiment Classification
 
-This project analyzes corporate climate disclosures to classify text into **climate risks**, **opportunities**, or **neutral statements**, and explores topic discovery methods to identify thematic structures in ESG-related narratives.
+This project focuses on classifying climate-related corporate disclosures into **Risk**, **Opportunity**, or **Neutral** categories.
 
-### 🔧 Methods Used
+### 🔧 Methods
 
-- **Text Classification Models**:
-  - Multinomial Naïve Bayes (CountVectorizer-based)
-  - Feedforward Neural Network (FFNN with random embeddings)
-  - TinyBERT (Transformer model for transfer learning)
+- **Models**:
+  - Multinomial Naïve Bayes
+  - Feedforward Neural Network (FFNN)
+  - TinyBERT (lightweight transformer model)
+- **Techniques**:
+  - CountVectorizer vs. TF-IDF
+  - N-gram tuning
+  - Error analysis on ambiguous and indirect texts
 
-- **Modifications & Observations**:
-  - Unigram features improve Naïve Bayes performance by reducing sparsity.
-  - FFNN performs poorly due to lack of contextual embedding.
-  - TinyBERT demonstrates strong generalization and benefits from pretrained knowledge.
+### 📊 Highlights
 
-- **Topic Modeling Techniques**:
-  - **BERTopic** (BERT + UMAP + HDBSCAN)
-  - **LDA** (Latent Dirichlet Allocation)
-  - **KMeans with MiniLM Embeddings**
+| Model        | Validation Accuracy | Test Accuracy |
+|--------------|---------------------|---------------|
+| Naïve Bayes  | 0.755               | 0.790         |
+| FFNN         | 0.550               | 0.490         |
+| TinyBERT     | 0.750               | 0.785         |
 
-- **Evaluation Metrics**:
-  - Classification Accuracy, Misclassification Analysis
-  - Topic Coherence, Diversity, Entropy, Purity
-
-### 📊 Key Results
-
-- **Naïve Bayes**: Best classifier with 79% test accuracy  
-- **BERTopic**: Outperformed LDA and KMeans with highest coherence (0.58) and diversity (0.74)  
-- **Granularity Tuning**: Smaller topic sizes improve interpretability and semantic richness  
-- **Class Mapping**: Topic-to-label alignment evaluated using entropy and purity measures
+- **Naïve Bayes** with unigrams was most effective due to domain-specific keyword cues.
+- **TinyBERT** generalized well with low-resource training, thanks to pretrained contextual embeddings.
+- **FFNN** underperformed due to limited representation power without pretrained input.
 
 ---
 
-## 🐦 Project 2 — Named Entity Recognition on Twitter
+## 🌍 Project 2 — Topic Modeling for Climate Disclosures
 
-This project builds a domain-adapted sequence tagging system to extract **people**, **organizations**, and **locations** from informal and noisy Twitter data.
+This project explores semantic themes in ESG reports using modern topic modeling techniques.
 
-### 🔧 Model Setup
+### 🛠 Methods
 
-- **Architecture**: Transformer-based model using [`vinai/BERTweet`](https://huggingface.co/vinai/bertweet-base)
-- **Tokenizer Handling**: Custom token-label alignment to handle subword tokenization
-- **Tagging Scheme**: BIO (Begin, Inside, Outside) format for entity spans
+- **Primary Approach**: BERTopic (BERT + UMAP + HDBSCAN)
+- **Baselines**:
+  - LDA (Latent Dirichlet Allocation)
+  - KMeans with MiniLM embeddings
+- **Evaluation**:
+  - Topic Coherence
+  - Diversity
+  - Label Purity & Entropy
 
-### 💡 Features and Design
+### 🔬 Key Findings
 
-- Subword tokenization for robustness to misspellings and abbreviations
-- Domain-specific pretraining (Twitter corpus) improves contextual modeling
-- Linear classification head with cross-entropy loss
+| Method                  | Coherence | Diversity | Silhouette |
+|-------------------------|-----------|-----------|------------|
+| LDA                    | 0.4363    | –         | –          |
+| KMeans + MiniLM        | –         | –         | 0.0195     |
+| **BERTopic**           | **0.5821**| **0.7450**| –          |
 
-### 📈 Evaluation
+- Fine-tuning `min_topic_size` revealed trade-offs between granularity and interpretability.
+- Clear label-topic alignment shown via label purity (>90% in some topics).
+- BERTopic demonstrated best ability to uncover **climate risk vs. opportunity** themes.
 
-- **Dataset**: Broad Twitter Corpus (BTC)
-- **Metrics**: Precision, Recall, F1-score (macro-averaged across entity types)
-- **Performance**:
-  - BERTweet achieved **F1 = 0.80**, outperforming BERT baseline by over 58 points
-  - Recognition best for **PER** > **LOC** > **ORG**
-- **Error Patterns**:
-  - Partial tagging of multi-token entities
-  - Confusions between PERSON and ORGANIZATION types
-  - Missed entities due to spelling variation or abbreviations
+---
+
+## 🐦 Project 3 — Named Entity Recognition on Twitter
+
+This project develops a domain-specific sequence tagger for noisy Twitter data using the **Broad Twitter Corpus (BTC)**.
+
+### 🧠 Model
+
+- **Architecture**: BERTweet (Transformer pretrained on Twitter)
+- **Tag Format**: BIO (Begin–Inside–Outside)
+- **Token Alignment**: Custom alignment for subwords using `is_split_into_words=True`
+
+### 🧪 Results
+
+| Model     | Precision | Recall | F1 Score | Loss    |
+|-----------|-----------|--------|----------|---------|
+| BERTweet | 0.8074    | 0.7975 | **0.8004** | 0.1348  |
+
+- Domain-specific pretraining led to **58-point F1 gain** over vanilla BERT.
+- Highest recognition for PERSON > LOCATION > ORGANIZATION.
+- Errors included partial multi-token spans and ambiguity between entities.
 
 ---
 
 ## 🛠️ Technologies Used
 
 - Python 3.10+
-- Libraries: `scikit-learn`, `transformers`, `datasets`, `pandas`, `matplotlib`, `seaborn`, `bertopic`, `nltk`
-- HuggingFace Transformers & Datasets
-- BERTopic for topic modeling
-- Jupyter Notebooks for experimentation
+- Libraries:
+  - `scikit-learn`, `transformers`, `datasets`
+  - `bertopic`, `umap-learn`, `hdbscan`
+  - `pandas`, `seaborn`, `matplotlib`
+- Jupyter Notebook, HuggingFace, and BERTweet
 
 ---
 
@@ -92,14 +110,13 @@ This project builds a domain-adapted sequence tagging system to extract **people
 ```plaintext
 text-analytics-projects/
 ├── project1_climate_sentiment/
-│   ├── sentiment_classification.ipynb
-│   ├── topic_modeling_bertopic.ipynb
-│   ├── data/
-│   │   └── climate_disclosures.csv
-│   └── outputs/
-│       └── figures, tables, topic maps
-├── project2_ner_twitter/
+│   ├── sentiment_classification_nb_bert_ffnn.ipynb
+│   └── report_summary_q1_q2.1.md
+├── project2_climate_topics/
+│   ├── topic_modeling_bertopic_vs_lda.ipynb
+│   └── results_topic_eval.pdf
+├── project3_twitter_ner/
 │   ├── ner_training_bertweet.ipynb
-│   ├── eval_ner_results.ipynb
-│   └── btc_dataset/
+│   ├── eval_f1_by_entity.ipynb
+│   └── examples_errors_analysis.txt
 └── README.md
